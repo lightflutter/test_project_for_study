@@ -13,11 +13,17 @@ class MyApp extends StatelessWidget {
         primarySwatch:  Colors.blue,
       ),
       home: Scaffold(
+        backgroundColor: Colors.red,
         appBar: AppBar(
           title: const Text('This is Flutter'),
         ),
         body: const Center(
-          child: Text('Hello World'),
+          child: Text('Hello World',
+            style: TextStyle(
+              fontSize: 46,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),),
         ),
       ),
     );
