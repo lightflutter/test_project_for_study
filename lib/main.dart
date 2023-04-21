@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_project_for_study/counter_widget.dart';
 import 'package:test_project_for_study/hint_label.dart';
 
 void main() => runApp(const MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
             children: const [
               HintLabel('Custom Label 1'),
               SizedBox(height: 8.0),
-              Text('Text widget'),
+              CounterWidget(),
               SizedBox(height: 8.0),
               HintLabel('Custom Label 2'),
             ],
