@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_project_for_study/HintLabel.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,22 +9,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'StatelessWidget Sample',
       theme: ThemeData(
-        primarySwatch:  Colors.blue,
+        primarySwatch: Colors.amber,
       ),
       home: Scaffold(
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.amber[300],
         appBar: AppBar(
-          title: const Text('This is Flutter'),
+          title: const Text('Labels'),
         ),
-        body: const Center(
-          child: Text('Hello World',
-            style: TextStyle(
-              fontSize: 46,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              HintLabel('Custom Label 1'),
+              SizedBox(height: 8.0),
+              Text('Text widget'),
+              SizedBox(height: 8.0),
+              HintLabel('Custom Label 2'),
+            ],
+          ),
         ),
       ),
     );
