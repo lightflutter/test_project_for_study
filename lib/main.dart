@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_project_for_study/HintLabel.dart';
+import 'package:test_project_for_study/hint_label.dart';
 
 void main() => runApp(const MyApp());
 
