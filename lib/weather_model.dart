@@ -1,5 +1,5 @@
 class WeatherModel {
-  static const String weatherURL = '';
+  static const String weatherURL = 'http://openweathermap.org/img/w/';
 
   DateTime dateTime;
   num degree;
@@ -11,5 +11,4 @@ class WeatherModel {
   String getIconURL() {
     return '$weatherURL$iconURL.png';
   }
-
 }
