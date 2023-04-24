@@ -1,4 +1,4 @@
-class WeatherModel {
+class Weather {
   static const String weatherURL = 'http://openweathermap.org/img/w/';
 
   DateTime dateTime;
@@ -6,7 +6,7 @@ class WeatherModel {
   int clouds;
   String iconURL;
 
-  WeatherModel(this.dateTime, this.degree, this.clouds, this.iconURL);
+  Weather(this.dateTime, this.degree, this.clouds, this.iconURL);
 
   String getIconURL() {
     return '$weatherURL$iconURL.png';
