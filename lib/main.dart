@@ -28,6 +28,15 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
     Weather(DateTime.now().add(const Duration(hours: 3)), 18, 80, '03d'),
     Weather(DateTime.now().add(const Duration(hours: 6)), 15, 50, '02d'),
     Weather(DateTime.now().add(const Duration(hours: 9)), 10, 0, '01d'),
+    Weather(DateTime.now().add(const Duration(hours: 3)), 18, 80, '03d'),
+    Weather(DateTime.now().add(const Duration(hours: 6)), 15, 50, '02d'),
+    Weather(DateTime.now().add(const Duration(hours: 9)), 10, 0, '01d'),
+    Weather(DateTime.now().add(const Duration(hours: 3)), 18, 80, '03d'),
+    Weather(DateTime.now().add(const Duration(hours: 6)), 15, 50, '02d'),
+    Weather(DateTime.now().add(const Duration(hours: 9)), 10, 0, '01d'),
+    Weather(DateTime.now().add(const Duration(hours: 3)), 18, 80, '03d'),
+    Weather(DateTime.now().add(const Duration(hours: 6)), 15, 50, '02d'),
+    Weather(DateTime.now().add(const Duration(hours: 9)), 10, 0, '01d'),
   ];
 
   @override
@@ -41,10 +50,11 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
         appBar: AppBar(
           title: const Text('Weather forecast'),
         ),
-        body: ListView(
-            children: weatherForecast
-                .map((weather) => WeatherListItem(weather))
-                .toList()),
+        body: ListView.builder(
+            itemCount: weatherForecast.length,
+            itemBuilder: (BuildContext context, int index) {
+              return WeatherListItem(weatherForecast[index]);
+            })
       ),
     );
   }
