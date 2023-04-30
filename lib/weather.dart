@@ -1,4 +1,6 @@
-class Weather {
+import 'package:test_project_for_study/list_item.dart';
+
+class Weather extends ListItem {
   static const String weatherURL = 'http://openweathermap.org/img/w/';
 
   DateTime dateTime;
