@@ -1,100 +1,100 @@
 import 'package:test_project_for_study/generated/json/base/json_convert_content.dart';
-import 'package:test_project_for_study/model/forecast_response_entity.dart';
+import 'package:test_project_for_study/model/forecast_response.dart';
 
-ForecastResponseEntity $ForecastResponseEntityFromJson(Map<String, dynamic> json) {
-	final ForecastResponseEntity forecastResponseEntity = ForecastResponseEntity();
+ForecastResponse $ForecastResponseFromJson(Map<String, dynamic> json) {
+	final ForecastResponse forecastResponse = ForecastResponse();
 	final String? cod = jsonConvert.convert<String>(json['cod']);
 	if (cod != null) {
-		forecastResponseEntity.cod = cod;
+		forecastResponse.cod = cod;
 	}
 	final int? message = jsonConvert.convert<int>(json['message']);
 	if (message != null) {
-		forecastResponseEntity.message = message;
+		forecastResponse.message = message;
 	}
 	final int? cnt = jsonConvert.convert<int>(json['cnt']);
 	if (cnt != null) {
-		forecastResponseEntity.cnt = cnt;
+		forecastResponse.cnt = cnt;
 	}
-	final List<ForecastResponseList>? list = jsonConvert.convertListNotNull<ForecastResponseList>(json['list']);
-	if (list != null) {
-		forecastResponseEntity.list = list;
-	}
+	// final List<ForecastResponseList>? list = jsonConvert.convertListNotNull<ForecastResponseList>(json['list']);
+	// if (list != null) {
+	// 	forecastResponse.list = list;
+	// }
 	final ForecastResponseCity? city = jsonConvert.convert<ForecastResponseCity>(json['city']);
 	if (city != null) {
-		forecastResponseEntity.city = city;
+		forecastResponse.city = city;
 	}
-	return forecastResponseEntity;
+	return forecastResponse;
 }
 
-Map<String, dynamic> $ForecastResponseEntityToJson(ForecastResponseEntity entity) {
+Map<String, dynamic> $ForecastResponseToJson(ForecastResponse entity) {
 	final Map<String, dynamic> data = <String, dynamic>{};
 	data['cod'] = entity.cod;
 	data['message'] = entity.message;
 	data['cnt'] = entity.cnt;
-	data['list'] =  entity.list.map((v) => v.toJson()).toList();
+	//data['list'] =  entity.list.map((v) => v.toJson()).toList();
 	data['city'] = entity.city.toJson();
 	return data;
 }
 
-ForecastResponseList $ForecastResponseListFromJson(Map<String, dynamic> json) {
-	final ForecastResponseList forecastResponseList = ForecastResponseList();
-	final int? dt = jsonConvert.convert<int>(json['dt']);
-	if (dt != null) {
-		forecastResponseList.dt = dt;
-	}
-	final ForecastResponseListMain? main = jsonConvert.convert<ForecastResponseListMain>(json['main']);
-	if (main != null) {
-		forecastResponseList.main = main;
-	}
-	final List<ForecastResponseListWeather>? weather = jsonConvert.convertListNotNull<ForecastResponseListWeather>(json['weather']);
-	if (weather != null) {
-		forecastResponseList.weather = weather;
-	}
-	final ForecastResponseListClouds? clouds = jsonConvert.convert<ForecastResponseListClouds>(json['clouds']);
-	if (clouds != null) {
-		forecastResponseList.clouds = clouds;
-	}
-	final ForecastResponseListWind? wind = jsonConvert.convert<ForecastResponseListWind>(json['wind']);
-	if (wind != null) {
-		forecastResponseList.wind = wind;
-	}
-	final int? visibility = jsonConvert.convert<int>(json['visibility']);
-	if (visibility != null) {
-		forecastResponseList.visibility = visibility;
-	}
-	final double? pop = jsonConvert.convert<double>(json['pop']);
-	if (pop != null) {
-		forecastResponseList.pop = pop;
-	}
-	final ForecastResponseListRain? rain = jsonConvert.convert<ForecastResponseListRain>(json['rain']);
-	if (rain != null) {
-		forecastResponseList.rain = rain;
-	}
-	final ForecastResponseListSys? sys = jsonConvert.convert<ForecastResponseListSys>(json['sys']);
-	if (sys != null) {
-		forecastResponseList.sys = sys;
-	}
-	final String? dtTxt = jsonConvert.convert<String>(json['dt_txt']);
-	if (dtTxt != null) {
-		forecastResponseList.dtTxt = dtTxt;
-	}
-	return forecastResponseList;
-}
+// ForecastResponseList $ForecastResponseListFromJson(Map<String, dynamic> json) {
+// 	final ForecastResponseList forecastResponseList = ForecastResponseList();
+// 	final int? dt = jsonConvert.convert<int>(json['dt']);
+// 	if (dt != null) {
+// 		forecastResponseList.dt = dt;
+// 	}
+// 	final ForecastResponseListMain? main = jsonConvert.convert<ForecastResponseListMain>(json['main']);
+// 	if (main != null) {
+// 		forecastResponseList.main = main;
+// 	}
+// 	final List<ForecastResponseListWeather>? weather = jsonConvert.convertListNotNull<ForecastResponseListWeather>(json['weather']);
+// 	if (weather != null) {
+// 		forecastResponseList.weather = weather;
+// 	}
+// 	final ForecastResponseListClouds? clouds = jsonConvert.convert<ForecastResponseListClouds>(json['clouds']);
+// 	if (clouds != null) {
+// 		forecastResponseList.clouds = clouds;
+// 	}
+// 	final ForecastResponseListWind? wind = jsonConvert.convert<ForecastResponseListWind>(json['wind']);
+// 	if (wind != null) {
+// 		forecastResponseList.wind = wind;
+// 	}
+// 	final int? visibility = jsonConvert.convert<int>(json['visibility']);
+// 	if (visibility != null) {
+// 		forecastResponseList.visibility = visibility;
+// 	}
+// 	final double? pop = jsonConvert.convert<double>(json['pop']);
+// 	if (pop != null) {
+// 		forecastResponseList.pop = pop;
+// 	}
+// 	final ForecastResponseListRain? rain = jsonConvert.convert<ForecastResponseListRain>(json['rain']);
+// 	if (rain != null) {
+// 		forecastResponseList.rain = rain;
+// 	}
+// 	final ForecastResponseListSys? sys = jsonConvert.convert<ForecastResponseListSys>(json['sys']);
+// 	if (sys != null) {
+// 		forecastResponseList.sys = sys;
+// 	}
+// 	final String? dtTxt = jsonConvert.convert<String>(json['dt_txt']);
+// 	if (dtTxt != null) {
+// 		forecastResponseList.dtTxt = dtTxt;
+// 	}
+// 	return forecastResponseList;
+// }
 
-Map<String, dynamic> $ForecastResponseListToJson(ForecastResponseList entity) {
-	final Map<String, dynamic> data = <String, dynamic>{};
-	data['dt'] = entity.dt;
-	data['main'] = entity.main.toJson();
-	data['weather'] =  entity.weather.map((v) => v.toJson()).toList();
-	data['clouds'] = entity.clouds.toJson();
-	data['wind'] = entity.wind.toJson();
-	data['visibility'] = entity.visibility;
-	data['pop'] = entity.pop;
-	data['rain'] = entity.rain.toJson();
-	data['sys'] = entity.sys.toJson();
-	data['dt_txt'] = entity.dtTxt;
-	return data;
-}
+// Map<String, dynamic> $ForecastResponseListToJson(ForecastResponseList entity) {
+// 	final Map<String, dynamic> data = <String, dynamic>{};
+// 	data['dt'] = entity.dt;
+// 	data['main'] = entity.main.toJson();
+// 	data['weather'] =  entity.weather.map((v) => v.toJson()).toList();
+// 	data['clouds'] = entity.clouds.toJson();
+// 	data['wind'] = entity.wind.toJson();
+// 	data['visibility'] = entity.visibility;
+// 	data['pop'] = entity.pop;
+// 	data['rain'] = entity.rain.toJson();
+// 	data['sys'] = entity.sys.toJson();
+// 	data['dt_txt'] = entity.dtTxt;
+// 	return data;
+// }
 
 ForecastResponseListMain $ForecastResponseListMainFromJson(Map<String, dynamic> json) {
 	final ForecastResponseListMain forecastResponseListMain = ForecastResponseListMain();

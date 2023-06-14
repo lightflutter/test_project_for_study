@@ -1,20 +1,20 @@
 import 'package:test_project_for_study/generated/json/base/json_field.dart';
-import 'package:test_project_for_study/generated/json/forecast_response_entity.g.dart';
+import 'package:test_project_for_study/generated/json/forecast_response.g.dart';
 import 'dart:convert';
 
 @JsonSerializable()
-class ForecastResponseEntity {
+class ForecastResponse {
 	late String cod;
 	late int message;
 	late int cnt;
-	late List<ForecastResponseList> list;
+	late List<ListItem> list;
 	late ForecastResponseCity city;
 
-	ForecastResponseEntity();
+	ForecastResponse();
 
-	factory ForecastResponseEntity.fromJson(Map<String, dynamic> json) => $ForecastResponseEntityFromJson(json);
+	factory ForecastResponse.fromJson(Map<String, dynamic> json) => $ForecastResponseFromJson(json);
 
-	Map<String, dynamic> toJson() => $ForecastResponseEntityToJson(this);
+	Map<String, dynamic> toJson() => $ForecastResponseToJson(this);
 
 	@override
 	String toString() {
@@ -23,7 +23,7 @@ class ForecastResponseEntity {
 }
 
 @JsonSerializable()
-class ForecastResponseList {
+class ListItem {
 	late int dt;
 	late ForecastResponseListMain main;
 	late List<ForecastResponseListWeather> weather;
@@ -36,11 +36,11 @@ class ForecastResponseList {
 	@JSONField(name: "dt_txt")
 	late String dtTxt;
 
-	ForecastResponseList();
+	ListItem();
 
-	factory ForecastResponseList.fromJson(Map<String, dynamic> json) => $ForecastResponseListFromJson(json);
+	//factory ListItem.fromJson(Map<String, dynamic> json) => $ForecastResponseListFromJson(json);
 
-	Map<String, dynamic> toJson() => $ForecastResponseListToJson(this);
+	//Map<String, dynamic> toJson() => $ForecastResponseListToJson(this);
 
 	@override
 	String toString() {
