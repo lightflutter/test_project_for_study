@@ -6,6 +6,7 @@ A new Flutter project for study Flutter
 
 This project is a starting point for a Flutter application.
 This has a weather App with network manager.
+Using ListView for show weather information.
 
 A few resources to get you started if this is your first Flutter project:
 
