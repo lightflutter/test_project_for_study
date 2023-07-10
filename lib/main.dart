@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:test_project_for_study/day_heading.dart';
 import 'package:test_project_for_study/list_item.dart';
+import 'package:test_project_for_study/weather_data.dart';
 import 'package:test_project_for_study/weather_list_item.dart';
 import 'package:test_project_for_study/weather.dart';
 import 'package:test_project_for_study/heading_list_item.dart';
+import 'package:test_project_for_study/permission.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 void main() => runApp(const MyApp());
 
@@ -26,36 +30,33 @@ class WeatherForecastPage extends StatefulWidget {
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
+  final Permission _permission = Permission();
+  final WeatherData _weatherData = WeatherData();
   List<ListItem> weatherForecast = <ListItem>[];
+
+  Future<void> getLocation() async {
+    bool isGetPermission = await _permission.handleLocationPermission();
+    print('$isGetPermission');
+
+    Position position = await Geolocator.getCurrentPosition(
+        forceAndroidLocationManager: false,
+        desiredAccuracy: LocationAccuracy.low);
+    List<Placemark> placemark =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    if (placemark.isNotEmpty) {
+      print('GOOD REQUEST ${placemark[0]}');
+    } else {
+      print('ERRROR: empty PLACAMARK ${placemark[0]}');
+    }
+  }
 
   @override
   void initState() {
+    getLocation();
+
     var itCurrentDay = DateTime.now();
     weatherForecast.add(DayHeading(itCurrentDay));
-    List<ListItem> weatherData = [
-      Weather(itCurrentDay, 20, 90, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 3)), 18, 0, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 6)), 10, 80, '03d'),
-      Weather(itCurrentDay.add(const Duration(hours: 9)), 9, 20, '01d'),
-      Weather(itCurrentDay.add(const Duration(hours: 12)), 11, 40, '01d'),
-      Weather(itCurrentDay.add(const Duration(hours: 15)), 12, 30, '03d'),
-      Weather(itCurrentDay.add(const Duration(hours: 18)), 14, 40, '02d'),
-      Weather(itCurrentDay.add(const Duration(hours: 21)), 16, 20, '01d'),
-      Weather(itCurrentDay.add(const Duration(hours: 24)), 15, 50, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 27)), 17, 60, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 30)), 12, 70, '03d'),
-      Weather(itCurrentDay.add(const Duration(hours: 33)), 8, 80, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 36)), 6, 90, '03d'),
-      Weather(itCurrentDay.add(const Duration(hours: 39)), 8, 90, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 42)), 10, 80, '01d'),
-      Weather(itCurrentDay.add(const Duration(hours: 45)), 13, 70, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 48)), 16, 60, '02d'),
-      Weather(itCurrentDay.add(const Duration(hours: 51)), 17, 50, '03d'),
-      Weather(itCurrentDay.add(const Duration(hours: 54)), 17, 40, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 57)), 15, 30, '02d'),
-      Weather(itCurrentDay.add(const Duration(hours: 60)), 11, 20, '04d'),
-      Weather(itCurrentDay.add(const Duration(hours: 63)), 9, 10, '01d'),
-    ];
+    List<ListItem> weatherData = _weatherData.getData(itCurrentDay);
 
     var itNextDay = DateTime.now().add(const Duration(days: 1));
     itNextDay =
