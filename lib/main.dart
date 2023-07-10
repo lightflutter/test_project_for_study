@@ -5,6 +5,9 @@ import 'package:test_project_for_study/weather_data.dart';
 import 'package:test_project_for_study/weather_list_item.dart';
 import 'package:test_project_for_study/weather.dart';
 import 'package:test_project_for_study/heading_list_item.dart';
+import 'package:test_project_for_study/permission.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 void main() => runApp(const MyApp());
 
@@ -27,11 +30,30 @@ class WeatherForecastPage extends StatefulWidget {
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
+  final Permission _permission = Permission();
   final WeatherData _weatherData = WeatherData();
   List<ListItem> weatherForecast = <ListItem>[];
 
+  Future<void> getLocation() async {
+    bool isGetPermission = await _permission.handleLocationPermission();
+    print('$isGetPermission');
+
+    Position position = await Geolocator.getCurrentPosition(
+        forceAndroidLocationManager: false,
+        desiredAccuracy: LocationAccuracy.low);
+    List<Placemark> placemark =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    if (placemark.isNotEmpty) {
+      print('GOOD REQUEST ${placemark[0]}');
+    } else {
+      print('ERRROR: empty PLACAMARK ${placemark[0]}');
+    }
+  }
+
   @override
   void initState() {
+    getLocation();
+
     var itCurrentDay = DateTime.now();
     weatherForecast.add(DayHeading(itCurrentDay));
     List<ListItem> weatherData = _weatherData.getData(itCurrentDay);
