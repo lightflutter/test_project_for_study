@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_project_for_study/current_placemark.dart';
 import 'package:test_project_for_study/day_heading.dart';
 import 'package:test_project_for_study/list_item.dart';
 import 'package:test_project_for_study/weather_data.dart';
@@ -6,7 +7,6 @@ import 'package:test_project_for_study/weather_list_item.dart';
 import 'package:test_project_for_study/weather.dart';
 import 'package:test_project_for_study/heading_list_item.dart';
 import 'package:test_project_for_study/permission.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 void main() => runApp(const MyApp());
@@ -34,18 +34,15 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
   final WeatherData _weatherData = WeatherData();
   List<ListItem> weatherForecast = <ListItem>[];
 
-  Future<void> getLocation() async {
-    bool isGetPermission = await _permission.handleLocationPermission();
-    print('$isGetPermission');
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    if (placemark.isNotEmpty) {
-      print('GOOD REQUEST ${placemark[0]}');
+  Future<Placemark> getLocation() async {
+    CurrentPlacemark currentPlacemark = CurrentPlacemark();
+    bool hasPermission = await _permission.handleLocationPermission();
+    print('$hasPermission');
+    if (!hasPermission) {
+      print('Hasn\'t permission ${Placemark()}');
+      return Placemark();
     } else {
-      print('ERRROR: empty PLACAMARK ${placemark[0]}');
+      return await currentPlacemark.get();
     }
   }
 
