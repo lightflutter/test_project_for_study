@@ -39,7 +39,6 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
     print('$isGetPermission');
 
     Position position = await Geolocator.getCurrentPosition(
-        forceAndroidLocationManager: false,
         desiredAccuracy: LocationAccuracy.low);
     List<Placemark> placemark =
         await placemarkFromCoordinates(position.latitude, position.longitude);
