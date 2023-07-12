@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:test_project_for_study/constants.dart';
+import 'package:test_project_for_study/list_item.dart';
 import 'package:test_project_for_study/model/forecast_response.dart';
 
 Future<List<ListItem>> getWeather(double lat, double lon) async {
