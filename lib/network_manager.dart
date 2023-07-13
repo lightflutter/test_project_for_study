@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:test_project_for_study/constants.dart';
 import 'package:test_project_for_study/list_item.dart';
-import 'package:test_project_for_study/model/forecast_response.dart';
+import 'package:test_project_for_study/model/forecast_entity.dart';
 
 Future<List<ListItem>> getWeather(double lat, double lon) async {
   var queryParameters = {
@@ -16,12 +16,12 @@ Future<List<ListItem>> getWeather(double lat, double lon) async {
       Constants.WEATHER_FORECAST_URL, queryParameters);
   var response = await get(url);
   if (response.statusCode == 200) {
-    var forecastResponse =
-    ForecastResponse.fromJson(json.decode(response.body));
-    if (forecastResponse.cod == '200') {
-      return forecastResponse.list;
+    var forecastEntity =
+    ForecastEntity.fromJson(json.decode(response.body));
+    if (forecastEntity.cod == '200') {
+      return forecastEntity.list;
     } else {
-      print('Error ${forecastResponse.cod}');
+      print('Error ${forecastEntity.cod}');
     }
   } else {
     print('Error occurred while loading data from server');
