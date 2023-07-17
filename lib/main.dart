@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:test_project_for_study/current_placemark.dart';
 import 'package:test_project_for_study/day_heading.dart';
 import 'package:test_project_for_study/list_item.dart';
+import 'package:test_project_for_study/network_manager.dart';
 import 'package:test_project_for_study/weather_data.dart';
 import 'package:test_project_for_study/weather_list_item.dart';
 import 'package:test_project_for_study/weather.dart';
 import 'package:test_project_for_study/heading_list_item.dart';
-import 'package:test_project_for_study/permission.dart';
-import 'package:geocoding/geocoding.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,42 +15,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WeatherForecastPage('Moscow');
+    return const WeatherForecastPage();
   }
 }
 
 class WeatherForecastPage extends StatefulWidget {
-  final String _cityName;
-
-  const WeatherForecastPage(this._cityName, {Key? key}) : super(key: key);
+  const WeatherForecastPage({super.key});
 
   @override
   State<WeatherForecastPage> createState() => _WeatherForecastPageState();
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
-  final Permission _permission = Permission();
   final WeatherData _weatherData = WeatherData();
-  List<ListItem> weatherForecast = <ListItem>[];
+  final List<ListItem> _weatherForecast = <ListItem>[];
+  bool isLoading = false;
 
-  Future<Placemark> getLocation() async {
+  _loadData() {
+    isLoading = true;
     CurrentPlacemark currentPlacemark = CurrentPlacemark();
-    bool hasPermission = await _permission.handleLocationPermission();
-    print('$hasPermission');
-    if (!hasPermission) {
-      print('Hasn\'t permission ${Placemark()}');
-      return Placemark();
-    } else {
-      return await currentPlacemark.get();
-    }
+    currentPlacemark.getLocation();
+    var locationFuture = currentPlacemark.getPosition();
+    locationFuture.then((position) {
+      var weatherFuture = getWeather(position.latitude, position.longitude);
+      weatherFuture.then((listItem) {
+        print('ListItem: $listItem');
+        isLoading = false;
+      });
+    });
   }
 
   @override
   void initState() {
-    getLocation();
+    _loadData();
 
     var itCurrentDay = DateTime.now();
-    weatherForecast.add(DayHeading(itCurrentDay));
+    _weatherForecast.add(DayHeading(itCurrentDay));
     List<ListItem> weatherData = _weatherData.getData(itCurrentDay);
 
     var itNextDay = DateTime.now().add(const Duration(days: 1));
@@ -65,9 +64,9 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
         itNextDay = itCurrentDay.add(const Duration(days: 1));
         itNextDay = DateTime(
             itNextDay.year, itNextDay.month, itNextDay.day, 0, 0, 0, 0);
-        weatherForecast.add(DayHeading(itCurrentDay));
+        _weatherForecast.add(DayHeading(itCurrentDay));
       } else {
-        weatherForecast.add(iterator.current);
+        _weatherForecast.add(iterator.current);
       }
     }
     super.initState();
@@ -85,9 +84,9 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
             title: const Text('Weather forecast'),
           ),
           body: ListView.builder(
-              itemCount: weatherForecast.length,
+              itemCount: _weatherForecast.length,
               itemBuilder: (BuildContext context, int index) {
-                final item = weatherForecast[index];
+                final item = _weatherForecast[index];
                 if (item is Weather) {
                   return WeatherListItem(item);
                 } else if (item is DayHeading) {
