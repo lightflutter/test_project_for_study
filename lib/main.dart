@@ -45,6 +45,14 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
     });
   }
 
+  Widget get _pageToDisplay {
+    if (isLoading) {
+      return _loadingView;
+    } else {
+      return _contentView:
+    }
+  }
+
   @override
   void initState() {
     _loadData();
