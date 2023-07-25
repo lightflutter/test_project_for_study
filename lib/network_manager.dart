@@ -4,7 +4,7 @@ import 'package:test_project_for_study/constants.dart';
 import 'package:test_project_for_study/list_item.dart';
 import 'package:test_project_for_study/model/forecast_entity.dart';
 
-Future<List<ListItem>> getWeather(double lat, double lon) async {
+Future<ListItem> getWeather(double lat, double lon) async {
   var queryParameters = {
     'lat': lat.toString(),
     'lon': lon.toString(),
@@ -19,14 +19,14 @@ Future<List<ListItem>> getWeather(double lat, double lon) async {
     var forecastEntity =
     ForecastEntity.fromJson(json.decode(response.body));
     if (forecastEntity.cod == '200') {
-      return forecastEntity.list;
+      return forecastEntity;
     } else {
-      print('Error ${forecastEntity.cod}');
+      Future.error(Exception('Data error: status code is ${response.statusCode}'));
     }
   } else {
-    print('Error occurred while loading data from server');
+    Future.error(Exception('Server request error: status code is ${response.statusCode}'));
   }
-  return <ListItem>[];
+  return Future.error(Exception('Status code is: ${response.statusCode}'));
 }
 
 
