@@ -17,7 +17,6 @@ Future<ForecastEntity> getWeather(double lat, double lon) async {
   if (response.statusCode == 200) {
     var forecastEntity = ForecastEntity.fromJson(json.decode(response.body));
     if (forecastEntity.cod == '200') {
-      print('Good request: $forecastEntity');
       return forecastEntity;
     } else {
       Future.error(
