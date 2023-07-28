@@ -2,10 +2,8 @@ import 'package:test_project_for_study/generated/json/base/json_field.dart';
 import 'package:test_project_for_study/generated/json/forecast_entity.g.dart';
 import 'dart:convert';
 
-import 'package:test_project_for_study/list_item.dart';
-
 @JsonSerializable()
-class ForecastEntity extends ListItem {
+class ForecastEntity {
 	late String cod;
 	late int message;
 	late int cnt;
@@ -25,7 +23,7 @@ class ForecastEntity extends ListItem {
 }
 
 @JsonSerializable()
-class ForecastList extends ListItem {
+class ForecastList {
 	late int dt;
 	late ForecastListMain main;
 	late List<ForecastListWeather> weather;
