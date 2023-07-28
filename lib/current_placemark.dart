@@ -23,11 +23,9 @@ class CurrentPlacemark {
         await placemarkFromCoordinates(position.latitude, position.longitude);
 
     if (placemark.isNotEmpty) {
-      print('GOOD REQUEST ${placemark[0]}');
       return placemark[0];
     } else {
-      print('ERRROR: empty PLACAMARK');
-      return Placemark();
+      return Future.error(Exception('No have placemark'));
     }
   }
 
