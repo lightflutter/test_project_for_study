@@ -1,12 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:test_project_for_study/current_placemark.dart';
-import 'package:test_project_for_study/day_heading.dart';
-import 'package:test_project_for_study/list_item.dart';
+import 'package:test_project_for_study/model/forecast_entity.dart';
 import 'package:test_project_for_study/network_manager.dart';
-import 'package:test_project_for_study/weather_data.dart';
 import 'package:test_project_for_study/weather_list_item.dart';
-import 'package:test_project_for_study/weather.dart';
-import 'package:test_project_for_study/heading_list_item.dart';
 
 void main() => runApp(const MyApp());
 
@@ -27,9 +24,41 @@ class WeatherForecastPage extends StatefulWidget {
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
-  final WeatherData _weatherData = WeatherData();
-  final List<ListItem> _weatherForecast = <ListItem>[];
+  List<ForecastList> _weatherForecast = <ForecastList>[];
   bool isLoading = false;
+
+  Widget _pageToDisplay() {
+    if (isLoading) {
+      return _loadingView();
+    } else {
+      return _contentView();
+    }
+  }
+
+  Widget _loadingView() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _contentView() {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: ListView.builder(
+          itemCount: _weatherForecast.length,
+          itemBuilder: (BuildContext context, int index) {
+            final item = _weatherForecast[index];
+            return WeatherListItem(item);
+          }),
+    );
+  }
+
+  Future<void> _onRefresh() async {
+    Completer<void> completer = Completer();
+    _loadData();
+    completer.complete(null);
+    return completer.future;
+  }
 
   _loadData() {
     isLoading = true;
@@ -38,46 +67,20 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
     var locationFuture = currentPlacemark.getPosition();
     locationFuture.then((position) {
       var weatherFuture = getWeather(position.latitude, position.longitude);
-      weatherFuture.then((listItem) {
-        print('ListItem: $listItem');
+      weatherFuture.then((weatherData) {
+        print('WEATHEData: $weatherData');
+        setState(() {
+          _weatherForecast = weatherData.list;
+        });
         isLoading = false;
       });
     });
   }
 
-  Widget get _pageToDisplay {
-    if (isLoading) {
-      return _loadingView;
-    } else {
-      return _contentView:
-    }
-  }
-
   @override
   void initState() {
-    _loadData();
-
-    var itCurrentDay = DateTime.now();
-    _weatherForecast.add(DayHeading(itCurrentDay));
-    List<ListItem> weatherData = _weatherData.getData(itCurrentDay);
-
-    var itNextDay = DateTime.now().add(const Duration(days: 1));
-    itNextDay =
-        DateTime(itNextDay.year, itNextDay.month, itNextDay.day, 0, 0, 0, 0, 1);
-    var iterator = weatherData.iterator;
-    while (iterator.moveNext()) {
-      var weatherDateTime = iterator.current as Weather;
-      if (weatherDateTime.dateTime.isAfter(itNextDay)) {
-        itCurrentDay = itNextDay;
-        itNextDay = itCurrentDay.add(const Duration(days: 1));
-        itNextDay = DateTime(
-            itNextDay.year, itNextDay.month, itNextDay.day, 0, 0, 0, 0);
-        _weatherForecast.add(DayHeading(itCurrentDay));
-      } else {
-        _weatherForecast.add(iterator.current);
-      }
-    }
     super.initState();
+    _loadData();
   }
 
   @override
@@ -91,18 +94,7 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
           appBar: AppBar(
             title: const Text('Weather forecast'),
           ),
-          body: ListView.builder(
-              itemCount: _weatherForecast.length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = _weatherForecast[index];
-                if (item is Weather) {
-                  return WeatherListItem(item);
-                } else if (item is DayHeading) {
-                  return HeadingListItem(item);
-                } else {
-                  throw Exception('wrong type');
-                }
-              })),
+          body: _pageToDisplay()),
     );
   }
 }
