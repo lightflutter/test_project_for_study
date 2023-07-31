@@ -24,7 +24,7 @@ class WeatherForecastPage extends StatefulWidget {
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
-  List<ForecastList> _weatherForecast = <ForecastList>[];
+  ForecastEntity _weatherForecast = ForecastEntity();
   bool isLoading = false;
 
   Widget _pageToDisplay() {
@@ -45,9 +45,9 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.builder(
-          itemCount: _weatherForecast.length,
+          itemCount: _weatherForecast.list.length,
           itemBuilder: (BuildContext context, int index) {
-            final item = _weatherForecast[index];
+            final item = _weatherForecast.list[index];
             return WeatherListItem(item);
           }),
     );
@@ -70,7 +70,7 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
       weatherFuture.then((weatherData) {
         print('WEATHEData: $weatherData');
         setState(() {
-          _weatherForecast = weatherData.list;
+          _weatherForecast = weatherData;
         });
         isLoading = false;
       });
