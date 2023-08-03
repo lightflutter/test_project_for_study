@@ -1,13 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:test_project_for_study/day_heading.dart';
-import 'package:test_project_for_study/list_item.dart';
-import 'package:test_project_for_study/weather_data.dart';
+import 'package:test_project_for_study/current_placemark.dart';
+import 'package:test_project_for_study/model/forecast_entity.dart';
+import 'package:test_project_for_study/network_manager.dart';
 import 'package:test_project_for_study/weather_list_item.dart';
-import 'package:test_project_for_study/weather.dart';
-import 'package:test_project_for_study/heading_list_item.dart';
-import 'package:test_project_for_study/permission.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,65 +12,74 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WeatherForecastPage('Moscow');
+    return const WeatherForecastPage();
   }
 }
 
 class WeatherForecastPage extends StatefulWidget {
-  final String _cityName;
-
-  const WeatherForecastPage(this._cityName, {Key? key}) : super(key: key);
+  const WeatherForecastPage({super.key});
 
   @override
   State<WeatherForecastPage> createState() => _WeatherForecastPageState();
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
-  final Permission _permission = Permission();
-  final WeatherData _weatherData = WeatherData();
-  List<ListItem> weatherForecast = <ListItem>[];
+  ForecastEntity _forecastEntity = ForecastEntity();
+  bool isLoading = false;
 
-  Future<void> getLocation() async {
-    bool isGetPermission = await _permission.handleLocationPermission();
-    print('$isGetPermission');
-
-    Position position = await Geolocator.getCurrentPosition(
-        forceAndroidLocationManager: false,
-        desiredAccuracy: LocationAccuracy.low);
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    if (placemark.isNotEmpty) {
-      print('GOOD REQUEST ${placemark[0]}');
+  Widget _pageToDisplay() {
+    if (isLoading) {
+      return _loadingView();
     } else {
-      print('ERRROR: empty PLACAMARK ${placemark[0]}');
+      return _contentView();
     }
+  }
+
+  Widget _loadingView() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _contentView() {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: ListView.builder(
+          itemCount: _forecastEntity.list.length,
+          itemBuilder: (BuildContext context, int index) {
+            final item = _forecastEntity.list[index];
+            return WeatherListItem(item);
+          }),
+    );
+  }
+
+  Future<void> _onRefresh() async {
+    Completer<void> completer = Completer();
+    _loadData();
+    completer.complete(null);
+    return completer.future;
+  }
+
+  _loadData() {
+    isLoading = true;
+    CurrentPlacemark currentPlacemark = CurrentPlacemark();
+    var locationFuture = currentPlacemark.getPosition();
+    locationFuture.then((position) {
+      var weatherFuture = getWeather(position.latitude, position.longitude);
+      weatherFuture.then((weatherData) {
+        print('WEATHEData: $weatherData');
+        setState(() {
+          _forecastEntity = weatherData;
+        });
+        isLoading = false;
+      });
+    });
   }
 
   @override
   void initState() {
-    getLocation();
-
-    var itCurrentDay = DateTime.now();
-    weatherForecast.add(DayHeading(itCurrentDay));
-    List<ListItem> weatherData = _weatherData.getData(itCurrentDay);
-
-    var itNextDay = DateTime.now().add(const Duration(days: 1));
-    itNextDay =
-        DateTime(itNextDay.year, itNextDay.month, itNextDay.day, 0, 0, 0, 0, 1);
-    var iterator = weatherData.iterator;
-    while (iterator.moveNext()) {
-      var weatherDateTime = iterator.current as Weather;
-      if (weatherDateTime.dateTime.isAfter(itNextDay)) {
-        itCurrentDay = itNextDay;
-        itNextDay = itCurrentDay.add(const Duration(days: 1));
-        itNextDay = DateTime(
-            itNextDay.year, itNextDay.month, itNextDay.day, 0, 0, 0, 0);
-        weatherForecast.add(DayHeading(itCurrentDay));
-      } else {
-        weatherForecast.add(iterator.current);
-      }
-    }
     super.initState();
+    _loadData();
   }
 
   @override
@@ -88,18 +93,7 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
           appBar: AppBar(
             title: const Text('Weather forecast'),
           ),
-          body: ListView.builder(
-              itemCount: weatherForecast.length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = weatherForecast[index];
-                if (item is Weather) {
-                  return WeatherListItem(item);
-                } else if (item is DayHeading) {
-                  return HeadingListItem(item);
-                } else {
-                  throw Exception('wrong type');
-                }
-              })),
+          body: _pageToDisplay()),
     );
   }
 }
