@@ -24,7 +24,7 @@ class WeatherForecastPage extends StatefulWidget {
 }
 
 class _WeatherForecastPageState extends State<WeatherForecastPage> {
-  ForecastEntity _weatherForecast = ForecastEntity();
+  ForecastEntity _forecastEntity = ForecastEntity();
   bool isLoading = false;
 
   Widget _pageToDisplay() {
@@ -45,9 +45,9 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.builder(
-          itemCount: _weatherForecast.list.length,
+          itemCount: _forecastEntity.list.length,
           itemBuilder: (BuildContext context, int index) {
-            final item = _weatherForecast.list[index];
+            final item = _forecastEntity.list[index];
             return WeatherListItem(item);
           }),
     );
@@ -63,14 +63,13 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
   _loadData() {
     isLoading = true;
     CurrentPlacemark currentPlacemark = CurrentPlacemark();
-    currentPlacemark.getLocation();
     var locationFuture = currentPlacemark.getPosition();
     locationFuture.then((position) {
       var weatherFuture = getWeather(position.latitude, position.longitude);
       weatherFuture.then((weatherData) {
         print('WEATHEData: $weatherData');
         setState(() {
-          _weatherForecast = weatherData;
+          _forecastEntity = weatherData;
         });
         isLoading = false;
       });
