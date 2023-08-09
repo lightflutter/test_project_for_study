@@ -1,4 +1,4 @@
-# test_project_for_study
+# Weather Application
 
 A new Flutter project for study Flutter
 
